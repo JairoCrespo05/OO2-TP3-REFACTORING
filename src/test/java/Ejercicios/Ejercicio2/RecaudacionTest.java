@@ -1,6 +1,7 @@
 package Ejercicios.Ejercicio2;
 
 
+import Ejercicios.ejercicio2.LectorCSV;
 import Ejercicios.ejercicio2.Recaudacion;
 import org.junit.jupiter.api.Test;
 
@@ -14,53 +15,100 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class RecaudacionTest {
 
     @Test
-    public void testWhereGivenCompany() throws IOException {
-        Map<String, String> options = new HashMap<String, String>();
-        options.put("company_name", "Facebook");
-        assertEquals(Recaudacion.where(options).size(), 7);
+    public void testEjecutarQueryGivenCompany() throws IOException {
+//        Map<String, String> options = new HashMap<String, String>();
+//        options.put("company_name", "Facebook");
+        var r1 = new Recaudacion(new LectorCSV("src/main/resources/data.csv"));
+
+        var resultado = r1
+                            .filtrarPor(Recaudacion.COMPANY_NAME, "Facebook")
+                            .ejecutarQuery();
+
+
+        assertEquals(resultado.size(), 7);
     }
 
     @Test
-    public void testWhereGivenCity() throws IOException {
-        Map<String, String> options = new HashMap<String, String>();
-        options.put("city", "Tempe");
-        assertEquals(Recaudacion.where(options).size(), 3);
+    public void testEjecutarQueryGivenCity() throws IOException {
+//        Map<String, String> options = new HashMap<String, String>();
+//        options.put("city", "Tempe");
+        var r1 = new Recaudacion(new LectorCSV("src/main/resources/data.csv"));
+
+        var resultado = r1
+                        .filtrarPor(Recaudacion.CITY, "Tempe")
+                        .ejecutarQuery();
+
+        assertEquals(resultado.size(), 3);
     }
 
     @Test
-    public void testWhereGivenState() throws IOException {
-        Map<String, String> options = new HashMap<String, String>();
-        options.put("state", "CA");
-        assertEquals(Recaudacion.where(options).size(), 873);
+    public void testEjecutarQueryGivenState() throws IOException {
+//        Map<String, String> options = new HashMap<String, String>();
+//        options.put("state", "CA");
+        var r1 = new Recaudacion(new LectorCSV("src/main/resources/data.csv"));
+
+        var resultado = r1
+                            .filtrarPor(Recaudacion.STATE, "CA")
+                            .ejecutarQuery();
+
+        assertEquals(resultado.size(), 873);
     }
 
     @Test
-    public void testWhereGivenRound() throws IOException {
-        Map<String, String> options = new HashMap<String, String>();
-        options.put("round", "a");
-        assertEquals(Recaudacion.where(options).size(), 582);
+    public void testEjecutarQueryGivenRound() throws IOException {
+//        Map<String, String> options = new HashMap<String, String>();
+////        options.put("round", "a");
+        var r1 = new Recaudacion(new LectorCSV("src/main/resources/data.csv"));
+
+        var resultado = r1
+                        .filtrarPor(Recaudacion.ROUND, "a")
+                        .ejecutarQuery();
+
+        assertEquals(resultado.size(), 582);
     }
 
+//EJEMPLO CLARO DE LOS CAMBIOS APLICADOS
     @Test
     public void testMultipleOptions() throws IOException {
         Map<String, String> options = new HashMap<String, String>();
-        options.put("round", "a");
-        options.put("company_name", "Facebook");
-        assertEquals(Recaudacion.where(options).size(), 1);
+        var r1 = new Recaudacion(new LectorCSV("src/main/resources/data.csv"));
+
+//        options.put("round", "a");
+//        options.put("company_name", "Facebook");
+
+        //Fluent API - Interfaces Fluidas
+
+        var resultado = r1
+                            .filtrarPor(Recaudacion.ROUND, "a")
+                            .filtrarPor(Recaudacion.COMPANY_NAME, "Facebook")
+                            .ejecutarQuery();
+
+        assertEquals(resultado.size(), 1);
+//        assertEquals(r1.where(options).size(), 1);
     }
 
     @Test
-    public void testWhereNotExists() throws IOException {
-        Map<String, String> options = new HashMap<String, String>();
-        options.put("company_name", "NotFacebook");
-        assertEquals(Recaudacion.where(options).size(), 0);
+    public void testEjecutarQueryNotExists() throws IOException {
+//        Map<String, String> options = new HashMap<String, String>();
+//        options.put("company_name", "NotFacebook");
+        var r1 = new Recaudacion(new LectorCSV("src/main/resources/data.csv"));
+
+        var resultado = r1
+                            .filtrarPor(Recaudacion.COMPANY_NAME, "NotFacebook")
+                            .ejecutarQuery();
+
+        assertEquals(resultado.size(), 0);
     }
 
     @Test
-    public void testWhereCorrectKeys() throws IOException {
-        Map<String, String> options = new HashMap<String, String>();
-        options.put("company_name", "Facebook");
-        Map<String, String> row = Recaudacion.where(options).get(0);
+    public void testEjecutarQueryCorrectKeys() throws IOException {
+//        Map<String, String> options = new HashMap<String, String>();
+//        options.put("company_name", "Facebook");
+        var r1 = new Recaudacion(new LectorCSV("src/main/resources/data.csv"));
+
+        Map<String, String> row = r1
+                                    .filtrarPor(Recaudacion.COMPANY_NAME, "Facebook")
+                                    .ejecutarQuery().get(0);
 
         assertEquals(row.get("permalink"), "facebook");
         assertEquals(row.get("company_name"), "Facebook");
